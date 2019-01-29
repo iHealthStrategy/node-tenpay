@@ -233,6 +233,16 @@ let result = await api.micropay({
 });
 ```
 
+### get_wxpayface_authinfo: 获取刷脸支付SDK调用凭证
+```javascript
+let result = await api.get_wxpayface_authinfo({
+  store_id: '门店编号',
+  store_name: '门店名称',
+  device_id: '终端设备编号',
+  rawdata: '初始化数据',
+});
+```
+
 ### unifiedOrder: 微信统一下单
 ```javascript
 let result = await api.unifiedOrder({
