@@ -1,13 +1,17 @@
 # 微信支付 for nodejs
 [![travis][travis]][travis-u] [![npm][npm]][npm-u] [![node][node]][node-u] [![issues][issues]][issues-u] [![commit][commit]][commit-u]
 
+## 功能概述
 - `通知类中间件` - 支付结果通知, 退款结果通知
-- `获取前端支付参数` - 支持JSSDK, WeixinJSBridge, 小程序, APP
-- `多种支付模式` - 支持公众号支付, 刷卡支付, 扫码支付, 微信红包, 企业付款
+- `获取前端支付参数` - 支持JSSDK, WeixinJSBridge, 小程序, APP, H5
+- `多种支付模式` - 公众号支付, 刷卡支付, 扫码支付, 微信红包, 企业付款(付款至零钱/银行卡)
 - `营销相关功能` - 微信代金券
 - `帐单下载与格式化` - 支持微信对帐单, 微信资金帐单
 - `支持服务商模式` - 所有api均可自行传入sub_appid, sub_mch_id
 - `微信支付仿真测试系统` - 支持沙盒模式, 用于完成支付验收流程
+
+## 交流群
+QQ群：157964097，使用疑问，开发，贡献代码请加群。
 
 ## 使用前必读
 #### 版本要求
@@ -58,8 +62,11 @@ const config = {
 };
 // 方式一
 const api = new tenpay(config);
-//方式二
+// 方式二
 const api = tenpay.init(config);
+
+// 调试模式(传入第二个参数为true, 可在控制台输出数据)
+const api = new tenpay(config, true);
 
 // 沙盒模式(用于微信支付验收)
 const sandboxAPI = await tenpay.sandbox(config);
@@ -97,6 +104,7 @@ const sandboxAPI = await tenpay.sandbox(config);
 ```javascript
 app.use(bodyParser.text({type: '*/xml'}));
 
+// 支付结果通知/退款结果通知
 router.post('/xxx', api.middlewareForExpress('pay'), (req, res) => {
   let info = req.weixin;
 
@@ -104,6 +112,16 @@ router.post('/xxx', api.middlewareForExpress('pay'), (req, res) => {
 
   // 回复消息(参数为空回复成功, 传值则为错误消息)
   res.reply('错误消息' || '');
+});
+
+// 扫码支付模式一回调
+router.post('/xxx', api.middlewareForExpress('nativePay'), (req, res) => {
+  let info = req.weixin;
+
+  // 业务逻辑和统一下单获取prepay_id...
+
+  // 响应成功或失败(第二个可选参数为输出错误信息)
+  res.replyNative(prepay_id, err_msg);
 });
 ```
 
@@ -123,6 +141,9 @@ router.post('/xxx', api.middleware('refund'), async ctx => {
 
   // 回复消息(参数为空回复成功, 传值则为错误消息)
   ctx.reply('错误消息' || '');
+
+  // 扫码支付模式一模式
+  ctx.replyNative(prepay_id);
 });
 ```
 
@@ -346,6 +367,25 @@ let result = await api.transfersQuery({
 });
 ```
 
+### payBank: 企业付款到银行卡
+```javascript
+let result = await api.payBank({
+  partner_trade_no: '商户内部付款订单号',
+  bank_code: '收款方开户行',
+  enc_bank_no: '收款方银行卡号',
+  enc_true_name: '收款方用户名',
+  amount: '付款金额(分)',
+  desc: '企业付款到银行卡描述信息'
+});
+```
+
+### queryBank: 查询企业付款到银行卡
+```javascript
+let result = await api.queryBank({
+  partner_trade_no: '商户内部付款订单号'
+});
+```
+
 ### sendRedpack: 发放普通红包
 ```javascript
 let result = await api.sendRedpack({
@@ -396,6 +436,11 @@ api.redpackQuery({
 ```
 ##### 相关默认值:
 - `bill_type` - MCHT
+
+## 捐赠
+欢迎同学们请作者喝一杯~
+
+![捐赠](https://raw.githubusercontent.com/befinal/about/master/enjoy.png)
 
 [travis]: https://img.shields.io/travis/befinal/node-tenpay.svg
 [travis-u]: https://travis-ci.org/befinal/node-tenpay

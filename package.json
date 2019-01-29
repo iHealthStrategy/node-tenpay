@@ -1,6 +1,6 @@
 {
   "name": "node-tenpay",
-  "version": "2.1.8",
+  "version": "2.1.15",
   "description": "微信支付 for nodejs",
   "main": "./lib",
   "scripts": {
@@ -20,6 +20,7 @@
     "企业付款",
     "wechat",
     "wechat-pay",
+    "wechat-facepay",
     "wechat-payment"
   ],
   "author": "Eric",
@@ -29,7 +30,7 @@
   },
   "homepage": "https://github.com/relzhong/node-tenpay#readme",
   "dependencies": {
-    "urllib": "^2.28.1",
+    "urllib": "^2.31.3",
     "xml2js": "^0.4.19"
   },
   "devDependencies": {
