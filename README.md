@@ -224,7 +224,7 @@ let result = await api.micropay({
 
 ### facepay: 刷脸支付
 ```javascript
-let result = await api.micropay({
+let result = await api.facepay({
   out_trade_no: '商户内部订单号',
   body: '商品简单描述',
   total_fee: '订单金额(分)',
